@@ -1,0 +1,9 @@
+{
+    "cost" : "100",
+    "familyName" : "Kamui Kirito",
+    "familyPhone" : "06-1234-5678",
+    "familyLine" : "line",
+    "familyBankName" : "Kiatnakin",
+    "familyBankAccount" : "0123456789",
+    "patient" : "http://localhost:8080/api/patientSaves/4"
+}

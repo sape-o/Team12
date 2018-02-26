@@ -1,0 +1,59 @@
+import com.moowork.gradle.node.task.NodeTask
+
+buildscript {
+	ext {
+		springBootVersion = '1.5.6.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		maven {
+      		url "https://plugins.gradle.org/m2/"
+    	}
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("com.moowork.gradle:gradle-node-plugin:1.2.0")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: "com.moowork.node"
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+node {
+  version = '4.8.4'
+  npmVersion = '3.9.2'
+  download = true
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-data-rest')
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	runtime('com.h2database:h2')
+	compileOnly('org.projectlombok:lombok')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile("org.springframework.boot:spring-boot-devtools")
+}
+
+task webpack(type: NodeTask, dependsOn: 'npmInstall') {
+  def osName = System.getProperty("os.name").toLowerCase();
+  if (osName.contains("windows")) {
+    script = project.file('node_modules/webpack/bin/webpack.js')
+  } else {
+    script = project.file('node_modules/.bin/webpack')
+  }
+}
+
+processResources.dependsOn 'webpack'
+
+clean.delete << file('node_modules')
+clean.delete << file('src/main/webapp/dist')
